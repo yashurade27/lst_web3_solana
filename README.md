@@ -1,13 +1,42 @@
-## Assignment
-1. Complete the functions in `mintTokens.ts` and `burnTokens.ts` to mint and burn tokens.
-2. Complete the function in `sendNativeTokens.ts` to send native tokens.
-3. Run the server using `npm run start` and test the functionality using the `curl` command.
+# SOL Deposit Vault Service
 
-## Better approach
-What can be a better approach to this problem?
+This service listens for incoming SOL deposits to a vault address and automatically refunds the native SOL back to the sender. Additionally, it mints and burns tokens behind the scenes to accurately track deposit balances.
 
-## Hints
- - Can you store all incoming events in a DB?
- - Can you think of what is wrong in line 16 of index.ts?
- - How can you ensure you are not double minting tokens?
- - How can you ensure that you're not burning tokens without sending them to the receiver?
+## How It Works
+
+1. A user sends SOL to the vault address.
+2. A webhook triggers upon detecting incoming SOL transfers.
+3. The system mints equivalent tokens to the sender's account.
+4. It burns tokens from the vault to maintain balance.
+
+## Setup & Run
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+Configuration
+Update your vault public key in either address.ts or .env (refer to .env.example for guidance).
+
+Run the Server
+```bash
+tsc
+node dist/index.js
+```
+
+Webhook Testing
+To expose your local server for webhook testing, use a tool like ngrok:
+
+```bash
+ngrok http 3000
+```
+
+API Endpoint
+```
+POST /helius
+```
+Receives webhook notifications for SOL transfers.
+Expects an array of transfer events where the toUserAccount matches your vault address.
+
